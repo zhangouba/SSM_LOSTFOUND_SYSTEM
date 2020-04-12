@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qst.manger.mapper.TbFoundMapper" >
+  <cache type="com.qst.common.redis.RedisCache"/>
+
+  <resultMap id="BaseResultMap" type="com.qst.manger.pojo.TbFound" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="category_id" property="categoryId" jdbcType="BIGINT" />
+    <result column="found_place" property="foundPlace" jdbcType="VARCHAR" />
+    <result column="found_time" property="foundTime" jdbcType="TIMESTAMP" />
+    <result column="infoTitle" property="infotitle" jdbcType="VARCHAR" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="QQ" property="qq" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.qst.manger.pojo.TbFound" extends="BaseResultMap" >
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <!-- 自定义开始 -->
+  <!-- 一周内失物 -->
+  	<select id="selectByTime" resultMap="BaseResultMap">
+  		SELECT
+  			id,category_id,
+			found_place,found_time,infoTitle,
+			description,images,status,contacts,tel,
+			QQ,email,address,created,updated
+  	    FROM tb_found
+		where updated BETWEEN DATE_SUB(CURDATE(),INTERVAL 7 DAY) AND SYSDATE() AND status = 1
+		ORDER BY updated DESC
+  	</select>
+  <!-- 自定义结束 -->
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, category_id, found_place, found_time, infoTitle, images, status, contacts, tel, 
+    QQ, email, address, password, created, updated
+  </sql>
+  <sql id="Blob_Column_List" >
+    description
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.qst.manger.pojo.TbFoundExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_found
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qst.manger.pojo.TbFoundExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_found
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tb_found
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_found
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qst.manger.pojo.TbFoundExample" >
+    delete from tb_found
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qst.manger.pojo.TbFound" >
+    insert into tb_found (id, category_id, found_place, 
+      found_time, infoTitle, images, 
+      status, contacts, tel, 
+      QQ, email, address, 
+      password, created, updated, 
+      description)
+    values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{foundPlace,jdbcType=VARCHAR}, 
+      #{foundTime,jdbcType=TIMESTAMP}, #{infotitle,jdbcType=VARCHAR}, #{images,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{contacts,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{description,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qst.manger.pojo.TbFound" >
+    insert into tb_found
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="foundPlace != null" >
+        found_place,
+      </if>
+      <if test="foundTime != null" >
+        found_time,
+      </if>
+      <if test="infotitle != null" >
+        infoTitle,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="contacts != null" >
+        contacts,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="qq != null" >
+        QQ,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="created != null" >
+        created,
+      </if>
+      <if test="updated != null" >
+        updated,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="foundPlace != null" >
+        #{foundPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="foundTime != null" >
+        #{foundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="infotitle != null" >
+        #{infotitle,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="contacts != null" >
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qst.manger.pojo.TbFoundExample" resultType="java.lang.Integer" >
+    select count(*) from tb_found
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update tb_found
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.categoryId != null" >
+        category_id = #{record.categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="record.foundPlace != null" >
+        found_place = #{record.foundPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.foundTime != null" >
+        found_time = #{record.foundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.infotitle != null" >
+        infoTitle = #{record.infotitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.images != null" >
+        images = #{record.images,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.contacts != null" >
+        contacts = #{record.contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tel != null" >
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qq != null" >
+        QQ = #{record.qq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.created != null" >
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updated != null" >
+        updated = #{record.updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update tb_found
+    set id = #{record.id,jdbcType=BIGINT},
+      category_id = #{record.categoryId,jdbcType=BIGINT},
+      found_place = #{record.foundPlace,jdbcType=VARCHAR},
+      found_time = #{record.foundTime,jdbcType=TIMESTAMP},
+      infoTitle = #{record.infotitle,jdbcType=VARCHAR},
+      images = #{record.images,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      contacts = #{record.contacts,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      QQ = #{record.qq,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP},
+      description = #{record.description,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update tb_found
+    set id = #{record.id,jdbcType=BIGINT},
+      category_id = #{record.categoryId,jdbcType=BIGINT},
+      found_place = #{record.foundPlace,jdbcType=VARCHAR},
+      found_time = #{record.foundTime,jdbcType=TIMESTAMP},
+      infoTitle = #{record.infotitle,jdbcType=VARCHAR},
+      images = #{record.images,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      contacts = #{record.contacts,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      QQ = #{record.qq,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.manger.pojo.TbFound" >
+    update tb_found
+    <set >
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="foundPlace != null" >
+        found_place = #{foundPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="foundTime != null" >
+        found_time = #{foundTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="infotitle != null" >
+        infoTitle = #{infotitle,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="contacts != null" >
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        QQ = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        updated = #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.qst.manger.pojo.TbFound" >
+    update tb_found
+    set category_id = #{categoryId,jdbcType=BIGINT},
+      found_place = #{foundPlace,jdbcType=VARCHAR},
+      found_time = #{foundTime,jdbcType=TIMESTAMP},
+      infoTitle = #{infotitle,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      contacts = #{contacts,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      QQ = #{qq,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.manger.pojo.TbFound" >
+    update tb_found
+    set category_id = #{categoryId,jdbcType=BIGINT},
+      found_place = #{foundPlace,jdbcType=VARCHAR},
+      found_time = #{foundTime,jdbcType=TIMESTAMP},
+      infoTitle = #{infotitle,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      contacts = #{contacts,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      QQ = #{qq,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--FOUND审核管理-->
+  <select id="loadAllFound" resultMap="BaseResultMap">
+    select * from tb_found where  status=0
+  </select>
+
+  <update id="updateFoundStatus">
+    update tb_found set status=#{status} where id=#{id}
+  </update>
+
+<!--业务管理的FOUND管理-->
+  <select id="BusloadAllFound" resultMap="BaseResultMap">
+    select  *  from  tb_found
+    where  status  <![CDATA[>=]]>  1
+    <if test="categoryId != null" >
+      and   category_id = #{categoryId,jdbcType=BIGINT}
+    </if>
+    <if test="foundPlace != null and foundPlace !=''" >
+      and    found_place like concat('%',#{found_place},'%')
+    </if>
+    <if test="infotitle != null  and infotitle !=''" >
+      and   infotitle like concat('%',#{infotitle},'%')
+    </if>
+    <if test="description != null" >
+      and    description like concat('%',#{description},'%')
+    </if>
+    order  by created desc
+  </select>
+
+
+  <!--加载我自己的-->
+  <select id="loadAllMyFound" resultMap="BaseResultMap">
+    select  * from tb_found where password=#{password}
+  </select>
+
+
+
+
+  <!--FOUNFDDATA-->
+  <select id="loadAllFoundForData" resultType="com.qst.manger.pojo.Data.BaseEntity">
+    select  tc.category_name as name ,COUNT(1) as value  from tb_found tl INNER JOIN tb_category tc ON tl.category_id=tc.id
+GROUP BY category_name ORDER BY value DESC
+  </select>
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+        <!--扫描除了controller里面的剩下的所有注解-->
+        <context:component-scan base-package="com.qst" use-default-filters="true">
+            <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        </context:component-scan>
+
+        <import resource="classpath:redis-context.xml"/>
+        <import resource="application-task.xml"/>
+<!--<bean id="propertyConfigurer"
+ class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+ p:ignoreUnresolvablePlaceholders="true">-->
+
+    <!-- 加载外部属性配置文件 -->
+    <bean id="propertyPlaceholderConfigurer"
+                                class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:jdbc.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+
+
+    <!--<bean id="urlpropertyConfigurer"-->
+                                 <!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+        <!--<property name="locations" value="classpath:url.properties"/>-->
+        <!--<property name="ignoreUnresolvablePlaceholders" value="true" />-->
+    <!--</bean>-->
+
+
+    <!-- 配置C3P0数据源 -->
+    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--初始化数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--设置初始化连接数大小-->
+        <property name="initialSize" value="5"></property>
+        <!--设置最大连接数-->
+        <property name="maxActive" value="50"></property>
+        <!--等待时间-->
+        <property name="maxWait" value="5000"></property>
+        <!--查看sql监控-->
+        <property name="filters" value="stat"></property>
+    </bean>
+
+    <!-- 配置session工厂 -->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:com/qst/manger/customMapper/*Mapper.xml</value>
+                <value>classpath*:com/qst/manger/mapper/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+
+    <!--  mybatis自动扫描 将Mapper接口生成代理注入到Spring -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qst.manger.mapper,com.qst.manger.customMapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+
+    <!--批量插入sql语句-->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryBean"/>
+    </bean>
+
+    <!--自动扫描service-->
+    <!--<context:component-scan base-package="com.lost.manger.service,com.lost.rest.service,com.lost.portal.service,com.lost.manger.security"-->
+
+    <!-- 事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+    <!--切面配置，开启基于注解的事务-->
+    <!--切入点，和事务增强-->
+  <!--  <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* com.lost.service..*(..))"/>
+    </aop:config>-->
+    <!--配置事务增强，事务如何切入-->
+    <!-- 通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 传播行为 -->
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="create*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="false"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="false"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 切面 -->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice"
+                     pointcut="execution(* com.qst.manger.service.*.*(..))"/>
+    </aop:config>
+
+
+
+</beans>

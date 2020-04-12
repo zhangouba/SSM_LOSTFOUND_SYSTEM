@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qst.manger.customMapper.DetFoundMapper">
+
+	<!-- found共同sql语句 -->
+	<sql id="Common_List">
+		tf.id,tc.category_name AS categoryName,
+		tf.found_place AS foundPlace,
+		tf.contacts,tf.email,
+		tf.description,tf.infoTitle,
+		tf.found_time AS foundTime1,tf.status,
+		tf.images,tf.QQ,tf.tel,tf.address,
+		tf.password,tf.created,tf.updated
+	</sql>
+	
+	<!-- 根据ID查询明细招领物 -->
+	<select id="selectFoundById" resultType="com.qst.manger.customPojo.DetFound" parameterType="java.lang.Long">
+		SELECT
+			<include refid="Common_List" />
+		FROM
+			tb_found AS tf
+			INNER JOIN tb_category AS tc ON tf.category_id = tc.id
+		WHERE tf.id = #{id,jdbcType=BIGINT}
+	</select>	
+
+	<!-- 查询所有明细失物 -->
+	<select id="selectAllDetailFound" resultType="com.qst.manger.customPojo.DetFound">
+		SELECT
+			<include refid="Common_List" />
+		FROM
+			tb_found AS tf
+			INNER JOIN tb_category AS tc ON tf.category_id = tc.id
+		ORDER BY tf.updated DESC
+	</select>
+	
+	<!-- 按条件分页查询所有明细失物 -->
+	<select id="selectConditionFound" resultType="com.qst.manger.customPojo.DetFound" parameterType="com.qst.manger.customPojo.DetFound">
+		SELECT
+			<include refid="Common_List" />
+		FROM
+			tb_found AS tf
+			INNER JOIN (
+				SELECT
+					id,category_name
+				FROM
+					tb_category
+				<where>
+					<if test="categoryName != null">
+						 category_name = #{categoryName,jdbcType=VARCHAR}
+					</if>
+				</where>
+			) AS tc ON tf.category_id = tc.id
+		<where>
+			<if test="foundPlace != null">
+					tf.found_place LIKE "%"#{foundPlace,jdbcType=VARCHAR}"%"
+			</if>
+			<if test="infoTitle != null">
+				AND tf.infoTitle LIKE "%"#{infoTitle,jdbcType=VARCHAR}"%"
+			</if>
+			<if test="foundTime1 != null and foundTime2 != null">
+					AND tf.found_time BETWEEN #{foundTime1,jdbcType=TIMESTAMP} AND #{foundTime2,jdbcType=TIMESTAMP}
+			</if>
+			<if test="status != null">
+				AND tf.status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="keyword != null">
+				AND tf.infoTitle LIKE "%"#{keyword,jdbcType=VARCHAR}"%" OR tf.description LIKE "%"#{keyword,jdbcType=VARCHAR}"%"
+			</if>
+		</where>
+		ORDER BY tf.updated DESC
+	</select>
+
+</mapper>

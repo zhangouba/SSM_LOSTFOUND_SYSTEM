@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    <!--<typeAliases>-->
+        <!--<package name="com.qst.po"></package>-->
+    <!--</typeAliases>-->
+  <!--<typeAliases>-->
+      <!--<typeAlias type="com.qst.po.User" alias="user"></typeAlias>-->
+  <!--</typeAliases>-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--调整分页合理化，查不到超过页码或者小于页码-->
+            <!--<property name="reasonable" value="true"></property>-->
+        </plugin>
+    </plugins>
+
+
+</configuration>

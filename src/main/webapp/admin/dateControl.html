@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">  
+    <script src="http://cdn.bootcss.com/angular.js/1.5.8/angular.js"></script>
+    <script src="http://cdn.bootcss.com/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.js"></script>
+    <script src="https://cdn.bootcss.com/angular-i18n/1.5.8/angular-locale_zh-cn.js"></script>
+    <script>
+        angular.module('myApp',['ui.bootstrap'])
+        .controller('myCtrl',function($scope,$timeout){
+            
+            //下拉列表的数据
+            $scope.formats=['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate']
+            $scope.format=$scope.formats[1];
+            //datepickerpopup的数据
+            $scope.today=new Date();
+            $scope.dt1;
+            $scope.dt2;
+            $scope.altInputFormats=['yyyy/M!/d!','yyyy.M!.d!','yyyy M! d!'];//手动输入支持的格式
+            $scope.datepickerOptions1={
+                maxDate:$scope.dt2,
+                startingDay:1
+            };
+            $scope.datepickerOptions2={
+                minDate:$scope.dt1,
+                maxDate:$scope.today,
+                startingDay:1
+            };
+            //打开popup
+            $scope.pop1={
+                opened:false
+            };
+            $scope.pop2={
+                opened:false
+            };
+            $scope.openpop1=function(){
+                $scope.pop1.opened=true;
+            };
+            $scope.openpop2=function(){
+                $scope.pop2.opened=true;
+            };
+
+            //监听dt1 和dt2 如果dt1 变化就设置 datepickeroptions.mindate就变化
+
+            $scope.$watch('dt1',function(newValue,oldValue){
+                $scope.datepickerOptions2.minDate=newValue;
+            });
+            $scope.$watch('dt2',function(newValue,oldValue){
+                $scope.datepickerOptions1.maxDate=newValue;
+            });
+            /*手动输入限制 使用表单验证
+            *datepicker输入限制 使用maxDate minDate
+            *startPopup   最小时间  没有限制 最大时间 endTime
+            *endPopup 最小时间 startTime 最大时间 today
+            */
+        })
+    </script>    
+</head>
+<body ng-controller="myCtrl">
+    
+    <div class="row">
+        <div class="col-xs-6">
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt1" is-open="pop1.opened" 
+                     ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" datepicker-options="datepickerOptions1"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openpop1()"><i class="glyphicon  glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        <div class="col-xs-6">
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt2" is-open="pop2.opened" 
+                     ng-required="true" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" datepicker-options="datepickerOptions2"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-click="openpop2()"><i class="glyphicon  glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <select name="" id="" class="form-control" ng-model="format" ng-options="item for item in formats"></select>
+        </div>
+    </div>
+</body>
+</html>

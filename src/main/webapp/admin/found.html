@@ -1,0 +1,277 @@
+ <!DOCTYPE html>
+<html lang="en" ng-app="lostProperty">
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>招领管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+     <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    <!-- 分页组件开始 -->
+	<script src="../plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<!-- 分页组件结束 -->
+	<script type="text/javascript" src="../js/base_pageUibs.js"></script>
+	<script type="text/javascript" src="../js/service/foundService.js"></script>
+	<script type="text/javascript" src="../js/controller/baseController.js"></script>
+	<script type="text/javascript" src="../js/controller/foundController.js"></script>
+	<script type="text/javascript" src="../js/directive/dateDirective.js"></script>
+	<!-- 弹窗开始 -->
+	<script type="text/javascript" src="../layer/layer.js"></script>
+	<!-- 弹窗结束 -->
+	<!-- 时间控件开始 -->
+    <script src="../js/dateControl/ui-bootstrap-tpls.js"></script>
+    <script src="../js/dateControl/angular-locale_zh-cn.js"></script>
+	<!-- 时间控件结束 -->
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-controller="foundController" ng-init="searchEntity={status:1}">
+  <!-- .box-body -->
+                
+                    <div class="box-header with-border">
+                        <h3 class="box-title">招领管理</h3>
+                    </div>
+
+                    <div class="box-body">
+
+                        <!-- 数据表格 -->
+                        <div class="table-box">
+
+                            <!--工具栏-->
+                            <div class="pull-left">
+                                <div class="form-group form-inline">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn bg-red btn-default" ng-click="del()" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
+                                        <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-tools pull-right">
+                           	  <form role="form" class="form-inline">
+	                                <div class="form-group">
+	                                	<label>    
+	                                		<i></i>失物类别：             
+		                      	            <select class="form-control" ng-model="searchEntity.categoryName">
+			                                    <option value="">请选择</option>
+			                                    <option ng-repeat="categoryEntity in categoryList" value="{{categoryEntity.categoryName}}">{{categoryEntity.categoryName}}</option>
+			                                </select>
+			                            </label> 
+		                            </div>
+								  
+	                                	                                
+								    <div class="form-group">
+							            <p class="input-group">
+							                <input class="form-control" uib-datepicker-popup="{{format}}" ng-model="searchEntity.foundTime1" is-open="pop1.opened" 
+							                     placeholder="请选择开始日期" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" datepicker-options="datepickerOptions1"/>
+							                <span class="input-group-btn">
+							                    <button class="btn btn-default" ng-click="openpop1()"><i class="glyphicon  glyphicon-calendar"></i></button>
+							                </span>
+							            </p>
+							        </div>
+							        
+							        <div class="form-group">
+							            <p class="input-group">
+							                <input class="form-control" uib-datepicker-popup="{{format}}" ng-model="searchEntity.foundTime2" is-open="pop2.opened" 
+							                     placeholder="请选择结束日期" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" datepicker-options="datepickerOptions2"/>
+							                <span class="input-group-btn">
+							                    <button class="btn btn-default" ng-click="openpop2()"><i class="glyphicon  glyphicon-calendar"></i></button>
+							                </span>
+							            </p>
+							        </div> 
+			                               
+			                        <div class="form-group">         
+								      	<input placeholder="请输入关键信息" class="form-control" ng-model="searchEntity.infoTitle"/>        
+							        </div>   
+	                                 
+	                                 <button class="btn btn-white" ng-click="reloadList()">查询</button>
+	                                 
+                                </form>                 
+                            </div>
+                            <!--工具栏/-->
+                            
+                            
+
+			                  <!--数据列表-->
+			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			                      <thead>
+			                          <tr>
+			                              <td class="" style="padding-right:0px">
+			                                  <input id="selallFound" type="checkbox" class="icheckbox_square-blue"  ng-click="getAllSelection($event)">
+			                              </td> 
+										  <td class="sorting_asc">信息编号</td>
+									      <td class="sorting_asc">分类名称</td>
+									      <td class="sorting_asc">信息标题</td>
+									      <td class="sorting_asc">联系人</td>
+									      <td class="sorting_asc">联系邮箱</td>
+									      <td class="sorting_asc">拾取时间</td>
+									      <td class="sorting_asc">操作</td>
+			                          </tr>
+			                      </thead>
+			                      <tbody id="checkFoundList">
+			                          <tr ng-repeat="entity in list">
+			                              <td><input  type="checkbox" onclick="allcheck3()" ng-click="updateSelection($event,entity.id)"></td>			                              
+				                          <td>{{entity.id}}</td>
+									      <td>{{entity.categoryName}}</td>
+									      <td>{{entity.infoTitle}}</td>
+		                                  <td>{{entity.contacts}}</td>
+									      <td>{{entity.email}}</td>
+									      <td>{{entity.foundTime1 | date:'yyyy-MM-dd'}}</td>
+									      
+									      <td class="text-center">                                           
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#sellerModal" ng-click="findOne(entity.id)" >查看详情</button>                                           
+		                                  </td>
+			                          </tr>
+			                      </tbody>
+			                  </table>
+			                  <!--数据列表/--> 
+                        </div>
+                        <!-- 数据表格 /-->
+                     </div>
+                    <!-- /.box-body -->
+	            <!-- 分页 -->
+				<tm-pagination conf="paginationConf"></tm-pagination>
+
+<!-- 商家详情 -->
+<div class="modal fade" id="sellerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">招领启事详情</h3>
+		</div>
+		<div class="modal-body">							
+			
+			 <ul class="nav nav-tabs">
+			  <li class="active"><a href="#home" data-toggle="tab">基本信息</a></li>
+			  <li><a href="#linkman" data-toggle="tab">联系人</a></li>
+			  <li><a href="#description" data-toggle="tab">详情描述</a></li>
+			</ul>							
+			
+			<!-- 选项卡开始 -->         
+		    <div id="myTabContent" class="tab-content">
+			    <div class="tab-pane active in" id="home">
+			      <br>
+			      <table class="table table-bordered table-striped"  width="800px">
+			      	<tr>
+			      		<td>信息编号</td>
+			      		<td>{{entity.id}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>信息标题</td>
+			      		<td>{{entity.infoTitle}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>分类名称</td>
+			      		<td>{{entity.categoryName}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>丢失地点</td>
+			      		<td>{{entity.foundPlace}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>丢失时间</td>
+			      		<td>{{entity.foundTime1 | date:'yyyy-MM-dd'}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>发布时间</td>
+			      		<td>{{entity.created | date:'yyyy-MM-dd'}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>图片信息</td>
+			      		<td>{{entity.images}}</td>
+			      	</tr>
+			      </table>			      
+      			</div>	
+			    <div class="tab-pane fade" id="linkman">
+			    	<br>
+					<table class="table table-bordered table-striped" >
+			      	<tr>
+			      		<td>联系人姓名</td>
+			      		<td>{{entity.contacts}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>联系人E-Mail</td>
+			      		<td>{{entity.email}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>联系人QQ</td>
+			      		<td>{{entity.qq}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>联系人手机</td>
+			      		<td>{{entity.tel}}</td>
+			      	</tr>
+			      	<tr>
+			      		<td>联系人地址</td>
+			      		<td>{{entity.address}}</td>
+			      	</tr>
+			      </table>
+			    </div>
+			    <div class="tab-pane fade" id="description">
+					<br>
+					<table class="table table-bordered table-striped" >
+				      	<tr>
+				      		<td>详情描述：</td>
+				      		<td>{{entity.description}}</td>
+				      	</tr>				   			      	
+			     	</table>
+			    </div>
+  			    </div> 			
+           <!-- 选项卡结束 -->          
+			
+			
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+<!-- 商家详情 结束-->
+				
+<script type="text/javascript">
+
+	$(function(){
+		$("#selallFound").prop("checked",false);
+	});
+
+	//复选框的全选和取消全选
+	$("#selallFound").click(function(){
+		if(this.checked){
+			$("#checkFoundList :checkbox").prop("checked",true);
+		}else{
+			$("#checkFoundList :checkbox").prop("checked",false);
+		}
+	
+	});
+	
+	function allcheck3(){
+		var chknum = $("#checkFoundList :checkbox").size();//选项总个数
+		var chk = 0;
+		
+		$("#checkFoundList :checkbox").each(function() {  
+	        if($(this).prop("checked")==true){
+				chk++;
+			}
+	    });
+	    
+		if(chknum==chk){//全选
+			$("#selallFound").prop("checked",true);
+		}else{//不全选
+			$("#selallFound").prop("checked",false);
+		}
+	}
+		
+</script> 				
+				
+	            
+</body>
+
+</html>

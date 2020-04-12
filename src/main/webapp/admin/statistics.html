@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>数据统计</title>
+	
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="../js/echarts.js"></script>
+	<script type="text/javascript" src="../js/macarons.js"></script>
+	<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+
+
+  </head>
+  
+  <body>
+  	
+  	<!--  为 ECharts 准备一个具备大小（宽高）的 DOM 饼形图 -->
+	<div id="first" style="width: 700px;height:500px;"></div>
+  
+  
+  
+  <script type="text/javascript">
+  
+  	//饼图模板
+	var dom = document.getElementById("first");
+	var myChart = echarts.init(dom,"macarons");
+	option = null;
+  	
+  	option = {
+		    title : {
+		        text: '失物招领网站启事类别',
+		        subtext: '数据统计',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        left: 'left',
+		        data: []
+		    },
+		    series : [
+		        {
+		            name: '数据统计',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['50%', '60%'],
+		            data:[],
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+	};
+  
+	  if (option && typeof option === "object") {
+	    	myChart.setOption(option, true);
+		}
+		
+	    $.ajax({
+           type: "get",
+           url: "../Mangerlost/statistics.do",
+           cache : false,    //禁用缓存
+           dataType: "json",
+           success: function(result) {
+                var names=[];//定义两个数组
+                  var nums=[];
+                  $.map(result.data,function(value,key){
+				  	names.push(value);
+				  	var obj = new Object();
+                    obj.name = value;
+                    obj.value = key;
+                    nums.push(obj);
+				  
+				  });
+                myChart.setOption({ //加载数据图表
+                          legend: {
+                                data: names
+                               },
+                        series: {
+                                // 根据名字对应到相应的系列
+                                data: nums
+                                }    
+           });
+           },
+           error: function(XMLHttpRequest, textStatus, errorThrown) {
+               alert("查询失败");
+           }
+       });
+  
+  </script>
+  
+  </body>
+</html>

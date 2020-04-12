@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>js中字符串处理</title>
+</head>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../js/autoComplete.js"></script>
+
+<style type="text/css">
+.auto_hidden {
+    width:204px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    position:absolute;
+    display:none;
+}
+.auto_show {
+    width:204px;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    position:absolute;
+    z-index:9999; /* 保证页面在最前端*/
+    display:block;
+    height:100px;
+    overflow:auto
+}
+.auto_onmouseover{
+    color:#ffffff;
+    background-color:highlight;
+    width:100%;
+}
+.auto_onmouseout{
+    color:#000000;
+    width:100%;
+    background-color:#ffffff;
+}
+
+</style>
+<body>
+	<h1>输入框动态提示信息</h1>
+	<div>
+		<label class="flabel">输入值：</label>
+		<input id="p_apiName" name="apiName" type="text" autocomplete="off" 
+		style="width:395px;height:30px;font-size:15pt;" onkeyup="autoComplete.start(event)">
+	</div>
+    <div class="auto_hidden" style="height: auto; background-color: #F0F0F0;font-size: 15pt;" id="auto">
+	</div>
+	
+<script type="text/javascript">
+	$(document).ready(function(){
+		//$('#p_apiName').val(api);
+		createApi();
+	});
+ 
+	var autoComplete;
+	function createApi(){
+		var inputValue=["小米手机一部","小米手机一部","小米手机一部","aa.bb.ccc.ee","as.sd.we.ee","123.425.ee","aa.bb.ccc.ee.ee","as.sd.we.ee.ee.e","123.425.e"];
+		if(!autoComplete){
+			autoComplete = new AutoComplete('p_apiName','auto',inputValue);//第一个参数是输入框id，第二个是下拉显示的id，第三个是获取的全部数据。
+		}
+		$('#p_apiName').blur(function () {//点击下拉选项得到获取值
+			//alert($('#p_apiName').val());点击获取选择的值。
+	    });
+	}
+</script>	
+	
+</body>
+</html>

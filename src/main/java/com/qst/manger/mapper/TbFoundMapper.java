@@ -1,6 +1,5 @@
 package com.qst.manger.mapper;
 
-import com.qst.manger.pojo.Data.BaseEntity;
 import com.qst.manger.pojo.TbFound;
 import com.qst.manger.pojo.TbFoundExample;
 import com.qst.manger.pojoVo.TbFoundVo;
@@ -54,6 +53,5 @@ public interface TbFoundMapper {
     //加载我自己的寻物启事
     List<TbFound> loadAllMyFound(String password);
 
-    //拾取物品类别统计
-    List<BaseEntity> loadAllFoundForData();
+
 }

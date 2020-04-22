@@ -484,12 +484,7 @@
     select * from tb_lost where  status=0
   </select>
 
-  <!--LOSTDATA-->
-  <select id="loadAllLostForData" resultType="com.qst.manger.pojo.Data.BaseEntity">
-      select  tc.category_name as name ,COUNT(1) as value  from tb_lost tl INNER JOIN tb_category tc ON tl.category_id=tc.id
-GROUP BY category_name ORDER BY value DESC
 
-  </select>
 
   <update id="updateLostStatus">
     update   tb_lost  set status=#{status} where id=#{id}

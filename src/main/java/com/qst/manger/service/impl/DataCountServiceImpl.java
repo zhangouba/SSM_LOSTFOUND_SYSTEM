@@ -1,8 +1,6 @@
 package com.qst.manger.service.impl;
 
-import com.qst.manger.mapper.TbCategoryMapper;
-import com.qst.manger.mapper.TbFoundMapper;
-import com.qst.manger.mapper.TbLostMapper;
+import com.qst.manger.mapper.*;
 import com.qst.manger.pojo.Data.BaseEntity;
 import com.qst.manger.service.DataCountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +12,23 @@ import java.util.List;
 public class DataCountServiceImpl implements DataCountService {
 
     @Autowired
-    private TbLostMapper tbLostMapper;
+    private TbLostDataCountMapper tbLostDataCountMapper;
     @Autowired
     private TbCategoryMapper tbCategoryMapper;
     @Autowired
-    private TbFoundMapper tbFoundMapper;
+    private TbFoundDataCountMapper tbFoundDataCountMapper;
+
+
 
     @Override
     public List<BaseEntity> loadUserLostCategory() {
-        List<BaseEntity> tbLosts= tbLostMapper.loadAllLostForData();
+        List<BaseEntity> tbLosts= tbLostDataCountMapper.loadAllLostForData();
         return tbLosts;
     }
 
     @Override
     public List<BaseEntity> loadUserFoundCategory() {
-        List<BaseEntity> tbFounds= tbFoundMapper.loadAllFoundForData();
+        List<BaseEntity> tbFounds= tbFoundDataCountMapper.loadAllFoundForData();
         return tbFounds;
     }
 }

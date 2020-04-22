@@ -199,10 +199,8 @@ public class PortalFoundServiceImpl implements PortalFoundService {
 			//删除评论信息
 
 			//根据物品ID删除
-			TbCommentExample example2 = new TbCommentExample();
-			TbCommentExample.Criteria createCriteria2 = example2.createCriteria();
-			createCriteria2.andGoodsIdEqualTo(foundId);
-			commentMapper.deleteByExample(example2);
+
+			commentMapper.deleteByFoundId(foundId);
 
 			return LostResult.ok();
 		} catch (Exception e) {

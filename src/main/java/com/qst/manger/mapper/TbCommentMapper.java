@@ -1,37 +1,21 @@
 package com.qst.manger.mapper;
 
 import com.qst.manger.pojo.TbComment;
-import com.qst.manger.pojo.TbCommentExample;
-import org.apache.ibatis.annotations.Param;
+import com.qst.manger.pojoVo.TbCommentVo;
 
 import java.util.List;
 
 public interface TbCommentMapper {
-    int countByExample(TbCommentExample example);
 
-    int deleteByExample(TbCommentExample example);
 
-    int deleteByPrimaryKey(Long id);
+    public void addComment(TbComment tbComment);
 
-    int insert(TbComment record);
+    void deleteByFoundId(Long foundId);
 
-    int insertSelective(TbComment record);
+    List<TbComment> getAllcomment(String goodsId);
 
-    List<TbComment> selectByExampleWithBLOBs(TbCommentExample example);
+    List<TbComment> getAll(TbCommentVo tbCommentVo);
+    void  deleteBykey(Integer id);
 
-    List<TbComment> selectByExample(TbCommentExample example);
-
-    TbComment selectByPrimaryKey(Long id);
-
-    int updateByExampleSelective(@Param("record") TbComment record, @Param("example") TbCommentExample example);
-
-    int updateByExampleWithBLOBs(@Param("record") TbComment record, @Param("example") TbCommentExample example);
-
-    int updateByExample(@Param("record") TbComment record, @Param("example") TbCommentExample example);
-
-    int updateByPrimaryKeySelective(TbComment record);
-
-    int updateByPrimaryKeyWithBLOBs(TbComment record);
-
-    int updateByPrimaryKey(TbComment record);
+    List<TbComment> getCommentByUserId(Integer userId);
 }

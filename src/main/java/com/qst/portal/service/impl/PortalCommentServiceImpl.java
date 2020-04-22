@@ -4,16 +4,17 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.qst.common.pojo.LostResult;
 import com.qst.common.pojo.PageResult;
-import com.qst.common.utils.IDUtils;
+import com.qst.common.utils.WebUtils;
 import com.qst.manger.mapper.TbCommentMapper;
+import com.qst.manger.mapper.TbUsersMapper;
 import com.qst.manger.pojo.TbComment;
-import com.qst.manger.pojo.TbCommentExample;
-import com.qst.manger.pojo.TbCommentExample.Criteria;
+import com.qst.manger.pojo.TbUsers;
 import com.qst.portal.service.PortalCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PortalCommentServiceImpl implements PortalCommentService {
@@ -22,21 +23,27 @@ public class PortalCommentServiceImpl implements PortalCommentService {
 	@Autowired
 	private TbCommentMapper tbCommentMapper;
 
+	@Autowired
+	private TbUsersMapper tbUsersMapper;
 	/*
 	 * 根据物品ID查询评论信息分页显示
 	 */
 	@Override
-	public PageResult getCommentById(Long goodsId, int page, int size) {
+	public PageResult getAllcomment(String goodsId, int page, int size) {
 		// 分页
 		PageHelper.startPage(page, size);
 		//根据物品ID查询评论信息
-		TbCommentExample example = new TbCommentExample();
-		Criteria createCriteria = example.createCriteria();
-		createCriteria.andGoodsIdEqualTo(goodsId);
-		//设置集合结果排序顺序
-		example.setOrderByClause("comment_time DESC");
 
-		Page<TbComment> page1 = (Page<TbComment>) tbCommentMapper.selectByExampleWithBLOBs(example);
+	    List<TbComment> tbComments= tbCommentMapper.getAllcomment(goodsId);
+
+	    for (TbComment tbComment:tbComments){
+		TbUsers tbUsers=	tbUsersMapper.selectByPrimaryKey(tbComment.getUserId());
+
+			tbComment.setRealname(tbUsers.getRealname());
+			tbComment.setUserPhoto(			tbUsers.getImg());
+		}
+
+		Page<TbComment> page1 = (Page<TbComment>) tbComments;
 		//分页处理
 		PageResult result = new PageResult(page1.getTotal(),page1.getResult());
 
@@ -48,16 +55,19 @@ public class PortalCommentServiceImpl implements PortalCommentService {
 	 */
 	@Override
 	public LostResult addComment(TbComment comment) {
-		// 补全评论信息
-		comment.setId(IDUtils.generateCommentId());
-		comment.setCommentTime(new Date());
-		comment.setCreated(new Date());
-		comment.setUpdated(new Date());
 
-		//加入数据
-		tbCommentMapper.insert(comment);
+		try {
+			TbUsers tbUsers = (TbUsers) WebUtils.getHttpSession().getAttribute("user");
+			comment.setUserId(tbUsers.getId());
+			comment.setCreateDate(new Date());
+			//加入数据
+			tbCommentMapper.addComment(comment);
 
-		return LostResult.ok();
+			return LostResult.ok();
+		}catch (Exception e){
+			return LostResult.build(500,"评论内容过长!请重新输入！");
+		}
+
 	}
 	
 	

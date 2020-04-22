@@ -29,7 +29,7 @@
 <table class="layui-hide" id="UserTable" lay-filter="UserTable"></table>
 
 <div  id="UserBar" style="display: none;">
-	<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
+	<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">查看</a>
 	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </div>
 <!-- 数据表格结束 -->

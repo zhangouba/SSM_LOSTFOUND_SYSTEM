@@ -1,66 +1,95 @@
 package com.qst.manger.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class TbComment implements Serializable {
-    private Long id;
 
-    private Long goodsId;
+    private String title;
 
-    private Date commentTime;
+    public String getTitle() {
+        return title;
+    }
 
-    private Date created;
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    private Date updated;
+    private String username;
 
-    private String commentText;
+    public String getUsername() {
+        return username;
+    }
 
-    public Long getId() {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private Integer id;
+    private String goodsId;
+    private Integer  userId;
+    private String   commentcontent;
+    private String userPhoto;
+    private String realname;
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date  createDate;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getGoodsId() {
+    public String getGoodsId() {
         return goodsId;
     }
 
-    public void setGoodsId(Long goodsId) {
+    public void setGoodsId(String goodsId) {
         this.goodsId = goodsId;
     }
 
-    public Date getCommentTime() {
-        return commentTime;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setCommentTime(Date commentTime) {
-        this.commentTime = commentTime;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public Date getCreated() {
-        return created;
+    public String getCommentcontent() {
+        return commentcontent;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCommentcontent(String commentcontent) {
+        this.commentcontent = commentcontent;
     }
 
-    public Date getUpdated() {
-        return updated;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public String getCommentText() {
-        return commentText;
-    }
-
-    public void setCommentText(String commentText) {
-        this.commentText = commentText == null ? null : commentText.trim();
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

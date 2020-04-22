@@ -1,6 +1,5 @@
 package com.qst.manger.mapper;
 
-import com.qst.manger.pojo.Data.BaseEntity;
 import com.qst.manger.pojo.TbLost;
 import com.qst.manger.pojo.TbLostExample;
 import com.qst.manger.pojoVo.TbLostVo;
@@ -54,5 +53,5 @@ public interface TbLostMapper {
     //加载我自己的寻物启事
     List<TbLost> loadAllMyLost(String password);
 
-    List<BaseEntity> loadAllLostForData();
+
 }

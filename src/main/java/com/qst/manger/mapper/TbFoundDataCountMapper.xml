@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qst.manger.mapper.TbFoundDataCountMapper" >
+
+
+
+    <!--FOUNFDDATA-->
+    <select id="loadAllFoundForData" resultType="com.qst.manger.pojo.Data.BaseEntity">
+    select  tc.category_name as name ,COUNT(1) as value  from tb_found tl INNER JOIN tb_category tc ON tl.category_id=tc.id
+    GROUP BY category_name ORDER BY value DESC
+  </select>
+
+</mapper>

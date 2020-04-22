@@ -16,4 +16,9 @@ public class MyselfController {
     public String tomyFound(){
         return "sys/myself/myFound";
     }
+
+    @RequestMapping("toMyComment")
+    public String toMyComment(){
+        return "sys/myself/myComment";
+    }
 }

@@ -17,14 +17,10 @@ import com.qst.manger.pojo.*;
 import com.qst.manger.pojo.TbTextinfoExample.Criteria;
 import com.qst.portal.service.PortalLostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 @Service
 public class PortalLostServiceImpl implements PortalLostService {
@@ -194,12 +190,9 @@ public class PortalLostServiceImpl implements PortalLostService {
 			createCriteria.andGoodsIdEqualTo(lostId);
 			textInfoMapper.deleteByExample(example);
 
-			//删除评论信息
-			//根据物品ID删除
-			TbCommentExample example2 = new TbCommentExample();
-			TbCommentExample.Criteria createCriteria2 = example2.createCriteria();
-			createCriteria2.andGoodsIdEqualTo(lostId);
-			commentMapper.deleteByExample(example2);
+
+
+			commentMapper.deleteByFoundId(lostId);
 
 			return LostResult.ok();
 		} catch (Exception e) {

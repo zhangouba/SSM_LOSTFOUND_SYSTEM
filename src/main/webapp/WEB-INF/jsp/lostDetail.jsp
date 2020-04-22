@@ -9,6 +9,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>失物招领-失物启事详情信息</title>
 <!-- link start -->
+	<%
+		pageContext.setAttribute("ctx",request.getContextPath());
+	%>
 <jsp:include page="commons/head-link.jsp"/>
 <!-- link end -->
 <!-- comment script start -->
@@ -31,7 +34,7 @@
 	<div class="breadcrumbs">
 		<div class="container">
 			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
-				<li><a href="${pageContext.request.contextPath}/admin/index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>首页</a></li>
+				<li><a href="${pageContext.request.contextPath}/index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>首页</a></li>
 				<li class="active">失物启事 详情信息</li>
 			</ol>
 		</div>
@@ -46,8 +49,8 @@
 				    <input id="goodsId" type="hidden" value="${lost.id}" />
 					<h3>启事详情信息</h3>
 					<ul class="cate">
-						<li><a href="#">信息编号：</a><span>${lost.id }</span></li>
-						<li><a href="#">浏览次数：</a><span>${lostTextInfo.pageView}次</span></li>
+						<li><a href="#">信息编号：</a><span id="mssageId">${lost.id }</span></li>
+						<li><a href="#">浏览次数：</a><span id="number">${lostTextInfo.pageView}次</span></li>
 						<c:choose>
 								<c:when test="${lostTextInfo.status == 0 }">
 									<li><a href="#">当前状态：</a><span>寻找中...</span></li>
@@ -74,7 +77,7 @@
 					</ul>
 				</div>
 				<div class="men-position animated wow slideInUp" data-wow-delay=".5s">
-					<a href="#"><img src="${pageContext.request.contextPath}/images/timg.jpg" style="width: 300px" alt=" " class="img-responsive" /></a>
+					<a href="#"><img src="${pageContext.request.contextPath}/images/timg.png" style="height: 400px"   class="img-responsive" /></a>
 					<div class="men-position-pos">
 						<!-- 放置文字位置点 -->
 					</div>
@@ -88,7 +91,7 @@
 									<a href="#"><img src="${pageContext.request.contextPath}/${lost.images }" alt=" " class="img-responsive" /></a>
 								</c:when>
 								<c:otherwise>
-									<a href="#"><img src="${pageContext.request.contextPath}/images/default.jpg" alt=" " class="img-responsive" /></a>
+									<a href="#"><img src="${pageContext.request.contextPath}/images/ocean.jpg" alt=" " class="img-responsive" /></a>
 								</c:otherwise>
 							</c:choose>
 						<div class="men-position-pos">
@@ -120,76 +123,60 @@
 					<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
 						<ul id="myTab" class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">详情描述</a></li>
-							<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">评论</a></li>
-
+							<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" onclick="getcomments()">评论</a></li>
 						</ul>
 						<div id="myTabContent" class="tab-content">
 							<div role="tabpanel" class="tab-pane fade in active bootstrap-tab-text" id="home" aria-labelledby="home-tab">
 								<p style='text-indent: 2em'>${lost.description }</p>
 							</div>
 							<div ng-controller="commentController" role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="profile" aria-labelledby="profile-tab">
-								<div class="bootstrap-tab-text-grids">
-								
-									<div ng-repeat="comment in commentList" class="bootstrap-tab-text-grid">
-										<div class="bootstrap-tab-text-grid-right">
-											<ul>
-												<li><a href="#">信息{{comment.id}}</a></li>
-												<li class="time-type2">{{comment.commentTime | date:'yyyy-MM-dd HH:mm:ss'}}</li>
-											</ul>
-											<p>{{comment.commentText}}</p>
-										    <br/>
-										</div>
+								<%--<div class="bootstrap-tab-text-grids">--%>
+
+									<%--<div ng-repeat="comment in commentList" class="bootstrap-tab-text-grid">--%>
+										<%--<div class="bootstrap-tab-text-grid-right">--%>
+											<%--<ul>--%>
+												<%--<li><a href="#">信息{{comment.id}}</a></li>--%>
+												<%--<li class="time-type2">{{comment.commentTime | date:'yyyy-MM-dd HH:mm:ss'}}</li>--%>
+											<%--</ul>--%>
+											<%--<p>{{comment.commentText}}</p>--%>
+										    <%--<br/>--%>
+										<%--</div>--%>
+									<%--</div>--%>
+
+									<%--<div class="clearfix"> </div>--%>
+									<%--<!-- 分页处理开始 -->--%>
+									<%--<hr/>--%>
+									<%--<div style="float:right">--%>
+										<%--<tm-pagination conf="paginationConf"></tm-pagination>--%>
+									<%--<!-- 分页处理结束 -->--%>
+									<%--</div>--%>
+									<%--<div class="clearfix"> </div>--%>
+
+									<table class="table table-hover" id="emps_table"  cellspacing="0" cellpadding="0" >
+										<thead>
+										<tr>
+
+										</tr>
+										</thead>
+
+										<tbody >
+
+										</tbody>
+									</table>
+									<div class="col-md-6" id="page_nav_area">
 									</div>
-									
-									<div class="clearfix"> </div>
-									<!-- 分页处理开始 -->
-									<hr/>
-									<div style="float:right">
-										<tm-pagination conf="paginationConf"></tm-pagination>
-									<!-- 分页处理结束 -->
-									</div>
-									<div class="clearfix"> </div>
-									
+
+
 									<div class="add-review">
 										<h4>回复</h4>
 										<form>
-											<textarea type="text" ng-model="entity.commentText" placeholder="评论信息..." required=""></textarea>
-											<input type="submit" ng-click="add()" value="发送" >
+											<textarea type="text" id="content" name="content" ng-model="entity.commentText" placeholder="评论信息..." required=""></textarea>
+											<input type="submit" id="send"  value="发送" >
 										</form>
 									</div>
 								</div>
 							</div>
-							<div ng-controller="lostController" role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="dropdown1" aria-labelledby="dropdown1-tab">
-								
-								<!-- password -->
-									<div class="login-form-grids">
-										<h5>请输入管理密码</h5>
-										<form>
-											<input type="password" ng-model="entity.password" placeholder="管理密码" required="" >
-											<span id="msg"></span>
-											<a id="modal-473189" href="#modal-container-473189" role="button" class="btn" data-toggle="modal">忘记密码？</a>
-											<input type="submit" ng-click="validate()" value="前往修改">
-										</form>	
-									</div>
-							<!-- //password -->
-							
-							</div>
-							<div ng-controller="lostController" role="tabpanel" class="tab-pane fade bootstrap-tab-text" id="dropdown2" aria-labelledby="dropdown2-tab">
-							
-							<!-- password -->
-									<div class="login-form-grids">
-										<h5>请输入管理密码</h5>
-										<form>
-											<input type="password" ng-model="entity.password" placeholder="管理密码" required="" >
-											<span id="msgDel"></span>
-											<a id="modal-473189" href="#modal-container-473189" role="button" class="btn" data-toggle="modal">忘记密码？</a>
-											<input type="submit" ng-click="validateDel()" value="确认删除">
-										</form>	
-									</div>
-						<!-- //password -->
-							
-							
-							</div>
+
 							
 						</div>
 					</div>
@@ -204,173 +191,7 @@
 				<div class="clearfix"> </div>
 			</div>
 			
-			<a id="modal-620847" href="#modal-container-620847" role="button" class="btn" data-toggle="modal"></a>
-			
-			<div ng-controller="lostController" class="modal fade" id="modal-container-620847" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							 <button type="button" onclick="window.location.reload();" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-							<h4 class="modal-title" id="myModalLabel">
-								修改寻物启事（表单中图片为回显图片，如需更新请重新上传。）
-							</h4>
-						</div>
-						<div class="modal-body">						
-						
-								<form>
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class=" glyphicon glyphicon-star"></i> 信息标题</span>
-										<input type="text" ng-model="lostEntity.infotitle" class="form-control" aria-describedby="basic-addon1" required="">
-									</div>
-					
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class=" glyphicon glyphicon-star"></i> 丢失地点</span>
-										<input type="text" ng-model="lostEntity.lostPlace" class="form-control" aria-describedby="basic-addon1" required="">
-									</div>
-													 
-									<div class="form-inline">
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1"><i class=" glyphicon glyphicon-star"></i> 失物类别</span>
-											<select class="form-control" required="" ng-model="lostEntity.categoryId" 
-											ng-options="categoryEntity.id as categoryEntity.categoryName for categoryEntity in categoryList"></select>
-										</div>
-									</div>
-									
-									<c:if test="${!empty lost.images }">
-										<div class="form-inline">
-											<a href="#"><img src="${pageContext.request.contextPath}/{{lostEntity.images}}" style="height: 120px;width: 120px" alt=" " class="img-responsive" /></a>
-										</div>
-									</c:if>
-									
-									
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-picture"></i> 选择图片</span>
-							        	<div class="file-loading">
-											<input id="imagesFile" name="imagesFile" type="file">
-										</div>
-										<div id="errorBlocks" class="help-block"></div>
-										<input type="text" ng-model="lostEntity.images" hidden name="image"/>
-									</div>
-									
-									<div class="form-inline">
-										
-										<div class="input-group">
-											<p class="input-group">
-												<span class="input-group-addon" id="basic-addon1"><i class=" glyphicon glyphicon-star"></i> 丢失日期</span>
-								                <input class="form-control" uib-datepicker-popup="{{format}}" ng-model="lostEntity.lostTime" is-open="pop1.opened" 
-								                      required="" popup-placement="top" close-text="关闭" clear-text="清空" current-text="今天" alt-input-formats="altInputFormats" datepicker-options="datepickerOptions1"/>
-								                <span class="input-group-btn">
-								                    <button class="btn btn-default" ng-click="openpop1()"><i class="glyphicon  glyphicon-calendar"></i></button>
-								                </span>
-								            </p>
-										</div>
-									
-									</div>
-									
-									<div class="form-inline">				
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1">$ 悬赏金额</span>
-											<input type="text" ng-model="lostEntity.rewards" class="form-control" aria-describedby="basic-addon1">
-										</div>			
-									</div>
-									
-									<div class="form-inline">
-															
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-user"></i> 联系人</span>
-											<input type="text" ng-model="lostEntity.contacts" class="form-control" aria-describedby="basic-addon1">
-										</div>
-									
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-earphone"></i> 手机号码</span>
-											<input type="text" ng-model="lostEntity.tel" class="form-control" aria-describedby="basic-addon1">
-										</div>
-									
-									</div>
-									
-									<div class="form-inline">
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-star"></i> 联系邮箱</span>
-											<input type="email" ng-model="lostEntity.email" class="form-control" placeholder="忘记密码可通过邮箱找回" required="" aria-describedby="basic-addon1">
-										</div>
-										
-										<div class="input-group">
-											<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-plus"></i> QQ号码</span>
-											<input type="text" ng-model="lostEntity.qq" class="form-control" aria-describedby="basic-addon1">
-										</div>					
-									</div>	
-									
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-map-marker"></i> 联系地址</span>
-										<input type="text" ng-model="lostEntity.address" class="form-control" aria-describedby="basic-addon1">
-									</div>
-															
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class=" glyphicon glyphicon-star"></i> 详情描述</span>
-										<textarea type="text"  style="height:100px" ng-model="lostEntity.description" class="form-control" required="">{{lostEntity.description}}</textarea>
-									</div>
-									
-									<h5><i class="glyphicon glyphicon-star"></i>必填，请牢记该密码（修改、删除信息使用）</h5>
-									
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-lock"></i> 管理密码</span>
-										<input type="password" ng-model="lostEntity.password" class="form-control" aria-describedby="basic-addon1" required="">
-									</div>
-									
-									<div class="input-group">
-										<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-lock"></i> 确认密码</span>
-										<input type="password" id="confirmPassword" ng-model="confirmPwd" class="form-control" aria-describedby="basic-addon1" required="">
-									</div>
-									
-									<div>
-										<span id="lostMsg"></span>
-									</div>
-									
-									<div class="modal-footer">
-										 <button type="button" onclick="window.location.reload();" class="btn btn-default" data-dismiss="modal">关闭</button> 
-										 <input type="submit" class="btn btn-primary" ng-click="update()" value="确认修改">
-									</div>
-									
-								</form>
-								
-						</div>
-					</div>
-					
-				</div>
-				
-		   </div>
-			
-			<div ng-controller="lostController" class="modal fade" id="modal-container-473189" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-							<h4 class="modal-title" id="myModalLabel">
-								请输入信息编号，管理密码将发送至您的预留邮箱！
-							</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<div class="form-group">
-									<input type="text" class="form-control" ng-model="entity.id" placeholder="输入信息编号（信息编号在本页面启事详情信息中。）..."/>
-								</div>
-								
-								<div>
-									<span id="emailMsg"></span>
-								</div>
-								
-								<div class="modal-footer">
-									 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-									 <input type="submit" id="btnSendCode" class="btn btn-primary" ng-click="sendEmail()" value="确认发送">
-								</div>
-							</form>
-						</div>
-					</div>
-					
-				</div>
-				
-			</div>
-		   
+
 		   <!--图片上传 开始-->
 			 <link href="${pageContext.request.contextPath}/fileUpload/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
 			 <link href="${pageContext.request.contextPath}/fileUpload/themes/explorer-fas/theme.css" media="all" rel="stylesheet" type="text/css"/>
@@ -380,34 +201,75 @@
 			 <script src="${pageContext.request.contextPath}/fileUpload/themes/fas/theme.js" type="text/javascript"></script>
 			 <script src="${pageContext.request.contextPath}/fileUpload/themes/explorer-fas/theme.js" type="text/javascript"></script>
 			<!--图片上传结束 -->
-			
-		  <script>
-			    $(document).ready(function () {
-			    	$("#imagesFile").fileinput({
-				 		theme: 'fas',
-				 		language: 'zh',
-				 		showCaption: false, 
-				 		dropZoneEnabled: false,
-				 		showUpload: true,
-				 		showRemove: false,
-				 		uploadUrl: '${pageContext.request.contextPath}/pic/upload.action',
-				 		elErrorContainer: '#errorBlocks',
-				 		allowedFileExtensions: ['jpg', 'png', 'gif'],
-				 		fileActionSettings:{
-				 			showRemove: false,
-						    showUpload: false,
-						    showZoom: false,
-						    showDrag: true,
-				 		}
-				 	}).on('fileerror', function(event, data) {
-			        			layer.msg('上传失败', {icon: 2,time:1200});
-							}).on('fileuploaded', function(event, data) {
-									//设置image路径
-									$("input[name='image']").val(data.response.url).trigger('change');
-									layer.msg('上传成功', {icon: 1,time:1200});
-			         			});
-			    });
-			
+            <script src='../../login_js/js/jquery.min.js' type="text/javascript"></script>
+            <script type="text/javascript">
+                $("#send").click(
+                    function() {
+                        var content=$("#content").val();
+                        var goodsId=$("#goodsId").val();
+                        if (content!=null) {
+                         $.ajax({
+                             url:"/Portalcomment/add.action",
+                             type:"POST",
+                             data:{"commentcontent":content,"goodsId":goodsId},
+                             success:function (data) {
+                                 if (data.status==200){
+                                     //  alert(1);
+                                     alert("评论成功！");
+
+                                     window.location.reload();
+                                 } else {
+                                     //   alert(data.status);
+                                    alert("评论失败！");
+                                 }
+                             }
+                         })
+                        }
+                    });
+
+
+
+                function getcomments() {
+                    var goodsId=$("#goodsId").val();
+                    $.ajax({
+                        url:"/Portalcomment/getAllcomment.action",
+                        type:"POST",
+                        data:{"goodsId":goodsId},
+                        success:function (result) {
+                            //解析显示员工数据
+                            build_emps_table(result);
+
+                            //解析分页条
+                            build_page_nav(result);
+                        }
+                    });
+                }
+
+
+                function build_emps_table(result) {
+                    $("#emps_table tbody").empty();
+                    var emps=result.rows;
+
+                    $.each(emps,function(index,item){
+
+
+                        var userPhoto=$("<img style='width: 30px;position:relative;top: 2px' class='img-circle'></img>").attr("src",'/'+item.userPhoto);
+                        var realname=$("<td></td>").append(item.realname);
+
+
+
+                        var commentcontent=$("<td></td>").append(item.commentcontent);
+
+                        var createDate=$("<td></td>").append(item.createDate);
+
+                        $("<tr></tr>")
+                            .append(userPhoto).append(realname)
+                            .append(commentcontent)
+							.append(createDate)
+                            .appendTo("#emps_table tbody");
+                    });
+                }
+
 			</script>
 								     	
 		   

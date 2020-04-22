@@ -499,10 +499,5 @@
 
 
 
-  <!--FOUNFDDATA-->
-  <select id="loadAllFoundForData" resultType="com.qst.manger.pojo.Data.BaseEntity">
-    select  tc.category_name as name ,COUNT(1) as value  from tb_found tl INNER JOIN tb_category tc ON tl.category_id=tc.id
-GROUP BY category_name ORDER BY value DESC
-  </select>
 
 </mapper>

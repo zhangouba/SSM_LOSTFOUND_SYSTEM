@@ -5,6 +5,7 @@ import com.qst.common.pojo.PageResult;
 import com.qst.manger.pojo.TbComment;
 import com.qst.portal.service.PortalCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +24,9 @@ public class PortalCommentController {
 		return result;
 	}
 
-	@RequestMapping("/getAllcomment")
-	public PageResult getAllcomment(TbComment tbComment){
-		return portalCommentService.getAllcomment(tbComment.getGoodsId(),1,5);
+	@RequestMapping("/getAllcomment/{page}")
+	public PageResult getAllcomment(TbComment tbComment, @PathVariable("page")int page){
+		return portalCommentService.getAllcomment(tbComment.getGoodsId(),page,5);
 	}
 
 

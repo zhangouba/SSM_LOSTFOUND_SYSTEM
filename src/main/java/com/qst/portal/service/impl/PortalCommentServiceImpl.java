@@ -2,6 +2,7 @@ package com.qst.portal.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.qst.common.pojo.LostResult;
 import com.qst.common.pojo.PageResult;
 import com.qst.common.utils.WebUtils;
@@ -44,9 +45,23 @@ public class PortalCommentServiceImpl implements PortalCommentService {
 		}
 
 		Page<TbComment> page1 = (Page<TbComment>) tbComments;
+
+		//封装了相信的分页信息包括我们查询出来的数据,传入连续显示的页数
+		PageInfo page2=new PageInfo(tbComments,5);
 		//分页处理
 		PageResult result = new PageResult(page1.getTotal(),page1.getResult());
+		result.setPageNum(page1.getPageNum());		//当前页码
+		result.setFirstPage(page2.isIsFirstPage());//是否为第一页
+		result.setLastPage(page2.isIsLastPage());//是否为最后一页
+		result.setHasNextPage(page2.isHasNextPage());//是否有下一页
+		result.setHasPreviousPage(page2.isHasPreviousPage());//是否有上一页
 
+		result.setNavigatePages(page2.getNavigatePages()); //导航页码数
+		result.setNavigatepageNums(page2.getNavigatepageNums()); //所有导航页号
+		result.setPrePage(page2.getPrePage());//前一页
+		result.setNextPage(page2.getNextPage());	//后一页
+		result.setNavigateFirstPage(page2.getNavigateFirstPage());	//导航条上的第一页
+		result.setNavigateLastPage(page2.getNavigateLastPage());	//导航条上的zuihou一页
 		return result ;
 	}
 

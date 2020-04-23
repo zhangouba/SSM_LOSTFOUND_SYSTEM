@@ -113,7 +113,7 @@
 					<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
 						<ul id="myTab" class="nav nav-tabs" role="tablist">
 							<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">详情描述</a></li>
-							<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" onclick="getcomments()" aria-controls="profile">评论</a></li>
+							<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" onclick="getcomments('1')" aria-controls="profile">评论</a></li>
 
 						</ul>
 						<div id="myTabContent" class="tab-content">
@@ -158,6 +158,28 @@
 									</div>
 
 
+									<div id="page" style="text-align: center;" >
+									<%--<nav aria-label="Page navigation" >--%>
+										<%--&lt;%&ndash;<ul class="pagination">&ndash;%&gt;--%>
+											<%--&lt;%&ndash;<li class="disabled" id="pre">&ndash;%&gt;--%>
+												<%--&lt;%&ndash;<a  href="#" aria-label="Previous">&ndash;%&gt;--%>
+													<%--&lt;%&ndash;<span aria-hidden="true">&laquo;</span>&ndash;%&gt;--%>
+												<%--&lt;%&ndash;</a>&ndash;%&gt;--%>
+											<%--&lt;%&ndash;</li>&ndash;%&gt;--%>
+											<%--&lt;%&ndash;&lt;%&ndash;<li><a href="#">1</a></li>&ndash;%&gt;&ndash;%&gt;--%>
+											<%--&lt;%&ndash;&lt;%&ndash;<li><a href="#">2</a></li>&ndash;%&gt;&ndash;%&gt;--%>
+											<%--&lt;%&ndash;&lt;%&ndash;<li><a href="#">3</a></li>&ndash;%&gt;&ndash;%&gt;--%>
+											<%--&lt;%&ndash;&lt;%&ndash;<li><a href="#">4</a></li>&ndash;%&gt;&ndash;%&gt;--%>
+											<%--&lt;%&ndash;&lt;%&ndash;<li><a href="#">5</a></li>&ndash;%&gt;&ndash;%&gt;--%>
+
+											<%--&lt;%&ndash;<li class="disabled">&ndash;%&gt;--%>
+												<%--&lt;%&ndash;<a href="#" aria-label="Next">&ndash;%&gt;--%>
+													<%--&lt;%&ndash;<span aria-hidden="true">&raquo;</span>&ndash;%&gt;--%>
+												<%--&lt;%&ndash;</a>&ndash;%&gt;--%>
+											<%--&lt;%&ndash;</li>&ndash;%&gt;--%>
+										<%--&lt;%&ndash;</ul>&ndash;%&gt;--%>
+									<%--</nav>--%>
+									</div>
 									<div class="add-review">
 										<h4>回复</h4>
 										<form>
@@ -198,48 +220,118 @@
 			<!--图片上传结束 -->
 		<script src='../../login_js/js/jquery.min.js' type="text/javascript"></script>
 		<script type="text/javascript">
-            $("#send").click(
-                function() {
-                    var content=$("#content").val();
-                    var goodsId=$("#goodsId").val();
-                    if (content!=null) {
-                        $.ajax({
-                            url:"/Portalcomment/add.action",
-                            type:"POST",
-                            data:{"commentcontent":content,"goodsId":goodsId},
-                            success:function (data) {
-                                if (data.status==200){
-                                    //  alert(1);
-                                    alert("评论成功！");
-
-                                    window.location.reload();
-                                } else {
-                                    //   alert(data.status);
-                                    alert("评论失败！");
-                                }
-                            }
-                        })
-                    }
-                });
+            $("#send").click(function () {
+				submitComment();
+            });
 
 
-
-            function getcomments() {
+            function submitComment  () {
+                var content=$("#content").val();
                 var goodsId=$("#goodsId").val();
+                if (content!=null && content!="") {
+                    $.ajax({
+                        url:"/Portalcomment/add.action",
+                        type:"POST",
+                        data:{"commentcontent":content,"goodsId":goodsId},
+                        success:function (data) {
+                            if (data.status==200){
+                                //  alert(1);
+                             //   alert("评论成功！");
+                                $("#content").val("");
+                                getcomments(1);
+                            } else {
+                                //   alert(data.status);
+                                alert("评论失败！");
+                            }
+                        }
+                    })
+                }else {
+                    alert("评论内容不能为空!")
+				}
+            }
+
+
+
+            function getcomments(page) {
+
+                $("#page").empty();
+               // $("#pagenumbers").addClass("active")
+                var goodsId=$("#goodsId").val();
+
                 $.ajax({
-                    url:"/Portalcomment/getAllcomment.action",
+                    url:"/Portalcomment/getAllcomment/"+page,
                     type:"POST",
                     data:{"goodsId":goodsId},
                     success:function (result) {
                         //解析显示员工数据
                         build_emps_table(result);
+                        //alert(result.total);
+                        if (result.total<=5){
+                            $("#page").attr("style","display: none");
+						}
+						if (result.total>5)
+						{
+                            $("#page").attr("style","display: table");
+						}
 
-                        //解析分页条
-                        build_page_nav(result);
+                        var  ul=$("<ul></ul>").addClass("pagination");
+
+
+                         var   firstPageLi=$("<li></li>").append($("<a></a>").append("首页").attr("onclick","gotoNum("+0+")"));
+                         var   prePageLiPageLi=$("<li></li>").append($("<a></a>").append("&laquo;"));
+                         if (result.pageNum!=1){
+                           // var s=
+                          //  alert(temp)
+							// alert(s);
+                             prePageLiPageLi.attr("onclick","gotoNum("+(result.pageNum-2)+")");
+						 } else {
+                             prePageLiPageLi.attr("onclick","gotoNum("+0+")");
+						 }
+                        // if(result.hasPreviousPage==false){
+                        //     firstPageLi.addClass("disabled");
+                        //     prePageLiPageLi.addClass("disabled");
+                        // }
+
+                        var nextLiPageLi = $("<li></li>").append($("<a></a>").append("&raquo;"));
+                        var endpage = result.navigateLastPage - 1;
+                        var lastPageLi = $("<li></li>").append($("<a></a>").append("尾页").attr("onclick", "gotoNum(" + endpage + ")"));
+                        if(result.pageNum!=result.navigateLastPage){
+                            var temp=  result.pageNum;
+                            nextLiPageLi.attr("onclick","gotoNum("+temp+")");
+                        }else {
+                            var temp=  result.pageNum-1;
+                            nextLiPageLi.attr("onclick","gotoNum("+temp+")");
+						}
+                        ul.append(firstPageLi).append(prePageLiPageLi);
+
+
+
+
+                        // //解析分页条 onclick="getcomments('1')"
+				    	var navigatepageNums=result.navigatepageNums;
+                       $.each(navigatepageNums,function(index,item) {
+                           //var li=$("<li></li>")
+                           //  var pagenumber=$("<li></li>").append($("<a></a>")).prev().append(index+1).attr("onclick","gotoNum("+index+")")
+                           var numLi=$("<li></li>").append($("<a></a>").append(item)).attr("onclick","gotoNum("+index+")");
+                           if(result.pageNum==item){
+                               numLi.addClass("active");
+                           }
+						   ul.append(numLi);
+                       });
+
+                        ul.append(nextLiPageLi).append(lastPageLi);
+
+
+                        var navEle=$("<nav></nav>").append(ul);
+                        navEle.appendTo("#page");
                     }
                 });
             }
-
+			function gotoNum(index) {
+					//var number=	$(this).text();
+					pagenumber=index+1;
+                getcomments(pagenumber);
+			}
 
             function build_emps_table(result) {
                 $("#emps_table tbody").empty();

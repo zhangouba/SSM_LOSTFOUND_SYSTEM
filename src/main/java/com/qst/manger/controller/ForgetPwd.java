@@ -97,7 +97,7 @@ public class ForgetPwd {
        @RequestMapping(value = "/resetPwdsss",method = RequestMethod.POST)
        public LostResult resetPwd(String password){
         try {
-        //     System.out.println(password);
+        //     System.out.println(password); ewqewqeq
       //      mangerUserService.updateForgetPwd(email);
             String email= (String) WebUtils.getHttpSession().getAttribute("email");
             System.out.println(email+"--------------------------------------"+password);

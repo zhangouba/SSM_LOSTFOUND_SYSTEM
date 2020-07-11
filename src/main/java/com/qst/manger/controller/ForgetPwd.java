@@ -100,10 +100,11 @@ public class ForgetPwd {
         //     System.out.println(password);
       //      mangerUserService.updateForgetPwd(email);
             String email= (String) WebUtils.getHttpSession().getAttribute("email");
-         //   System.out.println(email);
+            System.out.println(email+"--------------------------------------"+password);
             mangerUserService.resetPwd(email,password);
-         //   System.out.println(21332112);
-          return   LostResult.build(200,"");
+
+
+            return   LostResult.build(200,"");
         }catch (Exception e){
            return LostResult.build(500,"");
         }

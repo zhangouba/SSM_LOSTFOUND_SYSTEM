@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qst.manger.mapper.TbUsersMapper">
-  <cache type="com.qst.common.redis.RedisCache"/>
+  <!--<cache type="com.qst.common.redis.RedisCache"/>-->
 
   <resultMap id="BaseResultMap" type="com.qst.manger.pojo.TbUsers">
     <id column="id" jdbcType="INTEGER" property="id" />

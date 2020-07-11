@@ -141,7 +141,9 @@ public class MangerUserServiceImpl implements MangerUserService {
 	public void resetPwd(String email,String password) {
 		TbUsers tbUsers=new TbUsers();
 		tbUsers.setPassword(password);
-		tbUsers.setPassword(email);
+		tbUsers.setEmail(email);
+		System.out.println(tbUsers.getEmail()+"service email");
+		System.out.println(tbUsers.getPassword()+"servcice  password");
 		userMapper.resetPwd(tbUsers);
 	}
 

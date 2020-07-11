@@ -84,11 +84,11 @@
         var verify = $("#verify").val();
     })
 
-    $(function () {
-        $("#basic-addon2").on("click", function () {
-            show_validate_msg("#email","error","请输入邮箱!");
-        });
-    })
+    // $(function () {
+    //     $("#basic-addon2").on("click", function () {
+    //         show_validate_msg("#email","error","请输入邮箱!");
+    //     });
+    // })
 
     $(function () {
         $("#button").attr("ajax-va","error");
@@ -148,11 +148,12 @@
         $("#basic-addon2").css("background-color","#83c7f0");
         $("#basic-addon2").unbind();
         //onclick="getCode()"
-        getRandomCode();
+
         if ($("#code").attr("email-va")=="error") {
             show_validate_msg("#code","","邮箱错误!");
             return false;
         }
+        getRandomCode();
         var email=$("#email").val();
         $.ajax({
             url:"/forget/getEmailCode.action",

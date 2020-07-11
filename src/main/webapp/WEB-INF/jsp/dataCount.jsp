@@ -37,7 +37,7 @@
 			<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
 				<ul id="myTab" class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">丢失物品类别统计</a></li>
-					<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">拾取物品类别统计</a></li>
+					<%--<li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">拾取物品类别统计</a></li>--%>
 				</ul>
 				<div id="myTabContent" class="tab-content">
 					<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
@@ -90,53 +90,53 @@
 
 
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
-						<div id="container1" style="height: 600px"></div>
-						<script type="text/javascript">
-                            $.post("${ctx}/data/loadUserFoundCategory.action",function (data) {
-                                var dom = document.getElementById("container1");
-                                var myChart = echarts.init(dom);
-                                var app = {};
-                                option = null;
-                                option = {
-                                    title: {
-                                        text: '丢失物品类别统计',
-                                        subtext: '',
-                                        left: 'center'
-                                    },
-                                    tooltip: {
-                                        trigger: 'item',
-                                        formatter: '{a} <br/>{b} : {c} ({d}%)'
-                                    },
-                                    legend: {
-                                        orient: 'vertical',
-                                        left: 'left',
-                                        data: data,
-                                    },
-                                    series: [
-                                        {
-                                            name: '丢失物品类别以及占比',
-                                            type: 'pie',
-                                            radius: '55%',
-                                            center: ['50%', '60%'],
-                                            data: data,
-                                            emphasis: {
-                                                itemStyle: {
-                                                    shadowBlur: 10,
-                                                    shadowOffsetX: 0,
-                                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                                }
-                                            }
-                                        }
-                                    ]
-                                };
-                                ;
-                                if (option && typeof option === "object") {
-                                    myChart.setOption(option, true);
-                                }
-                            })
-						</script>
-					</div>
+					<%--<div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">--%>
+						<%--<div id="container1" style="height: 600px"></div>--%>
+						<%--<script type="text/javascript">--%>
+                            <%--$.post("${ctx}/data/loadUserFoundCategory.action",function (data) {--%>
+                                <%--var dom = document.getElementById("container1");--%>
+                                <%--var myChart = echarts.init(dom);--%>
+                                <%--var app = {};--%>
+                                <%--option = null;--%>
+                                <%--option = {--%>
+                                    <%--title: {--%>
+                                        <%--text: '丢失物品类别统计',--%>
+                                        <%--subtext: '',--%>
+                                        <%--left: 'center'--%>
+                                    <%--},--%>
+                                    <%--tooltip: {--%>
+                                        <%--trigger: 'item',--%>
+                                        <%--formatter: '{a} <br/>{b} : {c} ({d}%)'--%>
+                                    <%--},--%>
+                                    <%--legend: {--%>
+                                        <%--orient: 'vertical',--%>
+                                        <%--left: 'left',--%>
+                                        <%--data: data,--%>
+                                    <%--},--%>
+                                    <%--series: [--%>
+                                        <%--{--%>
+                                            <%--name: '丢失物品类别以及占比',--%>
+                                            <%--type: 'pie',--%>
+                                            <%--radius: '55%',--%>
+                                            <%--center: ['50%', '60%'],--%>
+                                            <%--data: data,--%>
+                                            <%--emphasis: {--%>
+                                                <%--itemStyle: {--%>
+                                                    <%--shadowBlur: 10,--%>
+                                                    <%--shadowOffsetX: 0,--%>
+                                                    <%--shadowColor: 'rgba(0, 0, 0, 0.5)'--%>
+                                                <%--}--%>
+                                            <%--}--%>
+                                        <%--}--%>
+                                    <%--]--%>
+                                <%--};--%>
+                                <%--;--%>
+                                <%--if (option && typeof option === "object") {--%>
+                                    <%--myChart.setOption(option, true);--%>
+                                <%--}--%>
+                            <%--})--%>
+						<%--</script>--%>
+					<%--</div>--%>
 				</div>
 			</div>
 
